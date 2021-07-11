@@ -6,8 +6,8 @@
     <section>
       <base-card>
         <div class="controls">
-          <button>Refresh</button>
-          <router-link to="/register">Register as Coach</router-link>
+          <base-button propsMode="outline">Refresh</base-button>
+          <base-button propsLink propsTo="/register">Register as Coach</base-button>
         </div>
         <ul v-if="hasCoaches">
           <coach-item
@@ -31,10 +31,12 @@
 
 <script>
 import CoachItem from '../../components/coaches/CoachItem.vue';
+import BaseButton from '../../components/ui/BaseButton.vue';
 
 export default {
   components: {
-    CoachItem
+    CoachItem,
+    BaseButton
   },
   computed: {
     filteredCoaches() {
