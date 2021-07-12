@@ -1,37 +1,46 @@
 <template>
-  <base-dialog :show="!!error" title="An Error Occured!" @close="handleError">
-    <p>{{ error }}</p>
-  </base-dialog>
   <div>
-    <section>
-      <coach-filter @emit-change-filter="setFilters"></coach-filter>
-    </section>
-    <section>
-      <base-card>
-        <div class="controls">
-          <base-button propsMode="outline" @click="loadCoaches(true)">Refresh</base-button>
-          <base-button v-if="!isCoach && !isLoading" propsLink propsTo="/register">Register as Coach</base-button>
-        </div>
-        <div v-if="isLoading">
-          <base-spinner></base-spinner>
-        </div>
-        <ul v-else-if="hasCoaches">
-          <coach-item
-            v-for="coach in filteredCoaches"
-            :key="coach.id"
-            :propsID="coach.id"
-            :propsFirstName="coach.firstName"
-            :propsLastName="coach.lastName"
-            :propsRate="coach.hourlyRate"
-            :propsAreas="coach.areas"
-          >
-          </coach-item>
-        </ul>
-        <h3 v-else>
-          No coaches found.
-        </h3>
-      </base-card>
-    </section>
+    <base-dialog :show="!!error" title="An Error Occured!" @close="handleError">
+      <p>{{ error }}</p>
+    </base-dialog>
+    <div>
+      <section>
+        <coach-filter @emit-change-filter="setFilters"></coach-filter>
+      </section>
+      <section>
+        <base-card>
+          <div class="controls">
+            <base-button propsMode="outline" @click="loadCoaches(true)"
+              >Refresh</base-button
+            >
+            <base-button
+              v-if="!isCoach && !isLoading"
+              propsLink
+              propsTo="/register"
+              >Register as Coach</base-button
+            >
+          </div>
+          <div v-if="isLoading">
+            <base-spinner></base-spinner>
+          </div>
+          <ul v-else-if="hasCoaches">
+            <coach-item
+              v-for="coach in filteredCoaches"
+              :key="coach.id"
+              :propsID="coach.id"
+              :propsFirstName="coach.firstName"
+              :propsLastName="coach.lastName"
+              :propsRate="coach.hourlyRate"
+              :propsAreas="coach.areas"
+            >
+            </coach-item>
+          </ul>
+          <h3 v-else>
+            No coaches found.
+          </h3>
+        </base-card>
+      </section>
+    </div>
   </div>
 </template>
 
@@ -44,7 +53,7 @@ export default {
     CoachItem,
     CoachFilter
   },
-  data(){
+  data() {
     return {
       activeFilters: {
         frontend: true,
@@ -53,48 +62,50 @@ export default {
       },
       isLoading: false,
       error: null
-    }
+    };
   },
   computed: {
-    isCoach(){
-        return this.$store.getters['coaches/isCoach'];
+    isCoach() {
+      return this.$store.getters['coaches/isCoach'];
     },
     filteredCoaches() {
       const coaches = this.$store.getters['coaches/coaches'];
       return coaches.filter(coach => {
-        if(this.activeFilters.frontend && coach.areas.includes('frontend')){
+        if (this.activeFilters.frontend && coach.areas.includes('frontend')) {
           return true;
         }
-        if(this.activeFilters.backend && coach.areas.includes('backend')){
+        if (this.activeFilters.backend && coach.areas.includes('backend')) {
           return true;
         }
-        if(this.activeFilters.career && coach.areas.includes('career')){
+        if (this.activeFilters.career && coach.areas.includes('career')) {
           return true;
         }
         return false;
-      })
+      });
     },
     hasCoaches() {
       return !this.isLoading && this.$store.getters['coaches/hasCoaches'];
     }
   },
-  created(){
+  created() {
     this.loadCoaches();
   },
   methods: {
-    setFilters(updatedFilters){
+    setFilters(updatedFilters) {
       this.activeFilters = updatedFilters;
     },
-    async loadCoaches(refresh = false){
+    async loadCoaches(refresh = false) {
       this.isLoading = true;
-      try{
-        await this.$store.dispatch('coaches/loadCoaches', { forceResfresh: refresh });
-      }catch(error){
+      try {
+        await this.$store.dispatch('coaches/loadCoaches', {
+          forceResfresh: refresh
+        });
+      } catch (error) {
         this.error = error.message || 'Something went wrong!';
       }
       this.isLoading = false;
     },
-    handleError(){
+    handleError() {
       this.error = null;
     }
   }
