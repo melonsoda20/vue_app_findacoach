@@ -1,10 +1,10 @@
 <template>
   <div>
     <base-dialog :show="!!error" title="An error occurred" @close="handleError">
-        <p>{{ error }}</p>
+      <p>{{ error }}</p>
     </base-dialog>
-    <base-dialog :show="isLoading" title="Authenticating..." fixed >
-        <base-spinner></base-spinner>
+    <base-dialog :show="isLoading" title="Authenticating..." fixed>
+      <base-spinner></base-spinner>
     </base-dialog>
     <base-card>
       <form @submit.prevent="submitForm">
@@ -70,15 +70,16 @@ export default {
       }
 
       this.isLoading = true;
+      const actionPayload = {
+        email: this.email,
+        password: this.password
+      };
 
       try {
         if (this.mode === 'login') {
-          //...
+          await this.$store.dispatch('login', actionPayload);
         } else {
-          await this.$store.dispatch('signup', {
-            email: this.email,
-            password: this.password
-          });
+          await this.$store.dispatch('signup', actionPayload);
         }
       } catch (error) {
         this.error =
@@ -94,8 +95,8 @@ export default {
         this.mode = 'login';
       }
     },
-    handleError(){
-        this.error = null;
+    handleError() {
+      this.error = null;
     }
   }
 };
