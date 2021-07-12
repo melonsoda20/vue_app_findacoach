@@ -13,8 +13,12 @@
             <base-button propsMode="outline" @click="loadCoaches(true)"
               >Refresh</base-button
             >
+            <base-button 
+            propsLink 
+            propsTo="/auth"
+            v-if="!isLoggedIn">Login</base-button>
             <base-button
-              v-if="!isCoach && !isLoading"
+              v-if="isLoggedIn && !isCoach && !isLoading"
               propsLink
               propsTo="/register"
               >Register as Coach</base-button
@@ -85,6 +89,9 @@ export default {
     },
     hasCoaches() {
       return !this.isLoading && this.$store.getters['coaches/hasCoaches'];
+    },
+    isLoggedIn(){
+      return this.$store.getters.isAuthenticated;
     }
   },
   created() {
